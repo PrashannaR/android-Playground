@@ -7,17 +7,21 @@ import com.prashanna.androidplayground.posts.Domain.Model.PostsResponseModel
 import com.prashanna.androidplayground.posts.Domain.UseCase.GetPostsUseCase
 import kotlinx.coroutines.launch
 
-class PostsViewModel(
-    private  val getPostUseCase: GetPostsUseCase
-): ViewModel() {
+class PostsViewModel(private val getPostUseCase: GetPostsUseCase): ViewModel() {
     var posts = mutableStateOf<List<PostsResponseModel>>(listOf())
     var isLoading = mutableStateOf(true)
+    var error = mutableStateOf("")
 
     init {
         viewModelScope.launch {
-            posts.value = getPostUseCase()
-            isLoading.value = false
+            try {
+                posts.value = getPostUseCase()
+                isLoading.value = false
+            } catch (e: Exception) {
+                error.value = e.localizedMessage ?: "An unknown error occurred"
+                isLoading.value = false
+            }
         }
     }
-
 }
+
