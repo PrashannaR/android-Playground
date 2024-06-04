@@ -6,4 +6,3 @@ data class PostsResponseModel(
     val title: String,
     val body: String
 )
- 
